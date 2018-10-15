@@ -49,6 +49,18 @@ exec.shell(bin + ` --json 'https://example.org/foo/bar' host`)
 })
 .catch(showError)
 
+exec.shell(bin + ` --raw-output 'https://example.org/foo/bar' host`)
+.then((res) => {
+	assert.strictEqual(res.stdout, `example.org`)
+})
+.catch(showError)
+
+exec.shell(bin + ` --raw-output --json 'https://example.org/foo/bar' host`)
+.then((res) => {
+	assert.strictEqual(res.stdout, `example.org`)
+})
+.catch(showError)
+
 exec.shell(bin + ` 'https://example.org/foo/bar' scheme`)
 .then((res) => {
 	assert.strictEqual(res.stdout, `'https'`)

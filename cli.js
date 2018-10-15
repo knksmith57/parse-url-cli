@@ -12,7 +12,8 @@ const argv = mri(process.argv.slice(2), {
 	boolean: [
 		'help', 'h',
 		'version', 'v',
-		'json', 'j'
+		'json', 'j',
+		'raw-output', 'r'
 	]
 })
 
@@ -21,7 +22,8 @@ if (argv.help || argv.h) {
 Usage:
     parse-url <url> [component]
 Options:
-	--json  -j  Output JSON instead of a pretty represenation.
+	--json  -j        Output JSON instead of a pretty represenation.
+	--raw-output  -r  Output raw string values directly to stdout without quoting.
 Examples:
     parse-url 'https://example.org:2000/hello/world?foo=bar#baz' host
 \n`)
@@ -57,7 +59,9 @@ if (component) {
 	val = parsed[component]
 }
 
-if (argv.json || argv.j) {
+if (typeof val === 'string' && (argv['raw-output'] || argv.r)) {
+	process.stdout.write(val + '\n')
+} else if (argv.json || argv.j) {
 	process.stdout.write(JSON.stringify(val) + '\n')
 } else {
 	const stdoutIsATerminal = isatty(process.stdout.fd)
